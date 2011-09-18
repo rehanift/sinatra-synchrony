@@ -21,6 +21,7 @@
             <li><a href="#benchmarks">Benchmarks</a></li>
             <li><a href="#geoloqi">Geoloqi</a></li>
             <li><a href="#further-reading">Further Reading</a></li>
+            <li><a href="#caveats">Caveats</a></li>
             <li><a href="#source-code">Source Code</a></li>
           </ul>
         </div>
@@ -209,6 +210,30 @@ Time taken for tests:   0.256 seconds
               <li><a href="http://rubysource.com/understanding-concurrent-programming-with-ruby-goliath">Understanding Concurrent Programming With Ruby's Goliath</a></li>
               <li><a href="http://www.unlimitednovelty.com/2010/08/multithreaded-rails-is-generally-better.html">Multithreaded Rails is generally better than Async Rails, and Rainbows is cooler than Node</a>  <small>(a fair minded critique of Reactor patterns. We're not anti-threads. We're pro-choice. <a href="http://al3x.net/2010/07/27/node.html">See Al3x's amazing blog post discussing this</a>.)</small></li>
             </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    
+    
+    
+    <div class="container">
+      <section id="caveats">
+        <div class="page-header">
+          <h1>Caveats <small>and a few other thoughts.</small></h1>
+        </div>
+        <div class="row">
+          <div class="span-16">
+            <p>This extension does not provide non-blocking IO drivers for everything. Right now the focus is to improve the performance of our ruby applications by enabling cooperative scheduling without resorting to callbacks. You don't have to make everything non-blocking to speed up applications with this approach, which is the important thing to understand. For example, if your database access blocks and is under ten milliseconds, it's not as bad as a blocking API call to an external web site that takes a few seconds.</p>
+
+            <p>There are numerous non-blocking IO drivers available for EventMachine. Check out the <a href="https://github.com/eventmachine/eventmachine/wiki/Protocol-Implementations">Protocol Implementations</a> page on the <a href="https://github.com/eventmachine/eventmachine/wiki">EventMachine GitHub Wiki</a> for a full list. I would personally like to see plug-and-play drivers implemented for the major three ORMs (ActiveRecord, DataMapper, Sequel). There are solutions for direct access though. For example, <a href="https://github.com/brianmario/mysql2">Mysql2</a> has excellent support for EventMachine, and I believe there are solutions for PostgreSQL as well. Learning how to do Fiber wrapping will empower you to understand how to make any async driver support this.</p>
+
+            <p>Please also keep in mind that MRI Ruby 1.9.2 (YARV) does have an internal mechanism for running some IO requests in a non-blocking manner similar to this <b>as long as you're using GIL threads and are not using EventMachine (and this includes any usage of Thin)</b>. Dig through the source code for <i>rb_thread_blocking_region</i> if you're interested in exploring this further. I'd like to see this implemented for things like system shell commands. If you're using Ruby 1.8, you should seriously consider switching to 1.9 YARV to take advantage of this. I have an awesome configuration script for <a href="http://rainbows.rubyforge.org">Rainbows</a> which complements this approach with a thread pool. If you'd like to see it, hit me up. I also have a Rainbows script for sinatra-synchrony you might be interested in.</p>
+
+            <p>So why is sinatra-synchrony useful if 1.9 doesn't block on IO? Well, Ruby 1.9 still blocks on a lot of things (I mentioned system commands, I'm sure there's more). And turning off the thread overhead still provides a very strong performance boost for IO work. So I would describe this as a tool squeezing every last bit out of your web applications. And if you code it right, it's easy to switch back to GIL threads (or something like JRuby with real threads). The important thing in any programming environment is to have options. Here is an option for you. Use it wisely.</p>
+            
+            
           </div>
         </div>
       </section>
