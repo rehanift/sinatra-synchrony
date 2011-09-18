@@ -51,7 +51,7 @@
         </div>
         <div class="row">
           <div class="span-16">
-            <p>Sinatra::Synchrony is a small extension for Sinatra that dramatically improves the parallelism (sometimes referred to as concurrency) of your web application. Powered by <a href="https://github.com/eventmachine/eventmachine">EventMachine</a> and <a href="https://github.com/igrigorik/em-synchrony">EM-Synchrony</a>, it increases the number of clients your application can serve per process when you have a lot of traffic and slow IO calls (like HTTP calls to external APIs). Because it uses <a href="http://www.ruby-doc.org/core-1.9/classes/Fiber.html">Fibers</a> internally to handle concurrency, no callback gymnastics are required! Just develop as if you were writing a normal Sinatra web application, use non-blocking libraries (see below) and you're all set!</p>
+            <p>Sinatra::Synchrony is a small extension for Sinatra that dramatically improves the parallelism (sometimes referred to as concurrency) of your web application. Powered by <a href="https://github.com/eventmachine/eventmachine">EventMachine</a> and <a href="https://github.com/igrigorik/em-synchrony">EM-Synchrony</a>, it increases the number of clients your application can serve per process when you have a lot of traffic and slow IO calls (like HTTP calls to external APIs). Because it uses <a href="http://www.ruby-doc.org/core-1.9/classes/Fiber.html">Fibers</a> internally to handle blocking IO, no callback gymnastics are required! Just develop as if you were writing a normal Sinatra web application, use non-blocking libraries (see below) and you're all set!</p>
           </div>
         </div>
       </section>
@@ -182,7 +182,7 @@ Time taken for tests:   0.256 seconds
         </div>
         <div class="row">
           <div class="span-16">
-            <p>This gem was designed to help us develop faster games and internal applications for <a href="http://geoloqi.com">Geoloqi</a>: a private, real-time mobile and web platform for securely sharing location data. We wanted to share with you how we deal with concurrency issues, and also make it easy to utilize this for our other projects. One of these projects is our recently released <a href="http://github.com/geoloqi/geoloqi-ruby">Geoloqi ruby adapter</a>, which utilizes Faraday and sinatra-synchrony to provide massive concurrency with almost no changes required to your code. Geoloqi is production ready right now, and we have a lot of major features and enhancements coming very soon.</p>
+            <p>This gem was designed to help us develop faster games and internal applications for <a href="http://geoloqi.com">Geoloqi</a>: a private, real-time mobile and web platform for securely sharing location data. We wanted to share with you how we deal with parallelism issues, and also make it easy to utilize this for our other projects. One of these projects is our recently released <a href="http://github.com/geoloqi/geoloqi-ruby">Geoloqi ruby adapter</a>, which utilizes Faraday and sinatra-synchrony to provide massive parallelism with almost no changes required to your code. Geoloqi is production ready right now, and we have a lot of major features and enhancements coming very soon.</p>
           </div>
         </div>
       </section>
