@@ -5,10 +5,12 @@
     <link rel="stylesheet" href="screen.css">
 
     <link href="google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="jquery-1.5.2.min.js"></script>
     <script type="text/javascript" src="google-code-prettify/prettify.js"></script>
+    <script src="bootstrap-scrollspy.js"></script>
   <body onload="prettyPrint()">
 
-    <div class="topbar">
+    <div class="topbar" data-scrollspy="scrollspy">
       <div class="topbar-inner">
         <div class="container">
           <a class="brand" href="#">Sinatra::Synchrony</a>
@@ -175,7 +177,7 @@ Time taken for tests:   0.256 seconds
         </div>
         <div class="row">
           <div class="span-16">
-            <p>This gem was designed to help us develop faster games and internal applications for Geoloqi: a private, real-time mobile and web platform for securely sharing location data. We wanted to share with you how we deal with concurrency issues, and also make it easy to utilize this for our other projects. One of these projects is our recently released Geoloqi ruby adapter, which utilizes Faraday and sinatra-synchrony to provide massive concurrency with almost no changes required to your code. Geoloqi is production ready right now, and we have a lot of major features and enhancements in store for this summer. Keep an eye on us! We won't disappoint.</p>
+            <p>This gem was designed to help us develop faster games and internal applications for <a href="http://geoloqi.com">Geoloqi</a>: a private, real-time mobile and web platform for securely sharing location data. We wanted to share with you how we deal with concurrency issues, and also make it easy to utilize this for our other projects. One of these projects is our recently released <a href="http://github.com/geoloqi/geoloqi-ruby">Geoloqi ruby adapter</a>, which utilizes Faraday and sinatra-synchrony to provide massive concurrency with almost no changes required to your code. Geoloqi is production ready right now, and we have a lot of major features and enhancements coming very soon.</p>
           </div>
         </div>
       </section>
@@ -194,5 +196,13 @@ Time taken for tests:   0.256 seconds
         </div>
       </section>
     </div>
+    
+    <footer class="footer">
+      <div class="container">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p></p>
+      </div>
+
+    </footer>
   </body>
 </html>
