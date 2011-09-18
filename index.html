@@ -1,0 +1,198 @@
+<html>
+  <head>
+    <title>Sinatra::Synchrony</title>
+    <link rel="stylesheet" href="bootstrap-1.3.0.min.css">
+    <link rel="stylesheet" href="screen.css">
+
+    <link href="google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="google-code-prettify/prettify.js"></script>
+  <body onload="prettyPrint()">
+
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Sinatra::Synchrony</a>
+          <ul class="nav">
+            <li class="active"><a href="#about">About</a></li>
+            <li><a href="#how-it-works">How it Works</a></li>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="#benchmarks">Benchmarks</a></li>
+            <li><a href="#geoloqi">Geoloqi</a></li>
+            <li><a href="#source-code">Source Code</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+    <header class="jumbotron masthead" id="overview">
+      <div class="inner">
+        <div class="container">
+          <h1>Sinatra::Synchrony</h1>
+          <p class="lead">
+            Fast, highly parallel web applications with no callbacks!
+          </p>
+        </div>
+      </div>
+    </header>
+
+
+    <div class="container info">
+      <section id="about">
+        <div class="page-header">
+          <h1>About <small></small></h1>
+        </div>
+        <div class="row">
+          <div class="span-16">
+            <p>Sinatra::Synchrony is a small extension for Sinatra that dramatically improves the parallelism (sometimes referred to as concurrency) of your web application. Powered by <a href="https://github.com/eventmachine/eventmachine">EventMachine</a> and <a href="https://github.com/igrigorik/em-synchrony">EM-Synchrony</a>, it increases the number of clients your application can serve per process when you have a lot of traffic and slow IO calls (like HTTP calls to external APIs). Because it uses <a href="http://www.ruby-doc.org/core-1.9/classes/Fiber.html">Fibers</a> internally to handle concurrency, no callback gymnastics are required! Just develop as if you were writing a normal Sinatra web application, use non-blocking libraries (see below) and you're all set!</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <div class="container">
+      <section id="how-it-works">
+        <div class="page-header">
+          <h1>How It Works<small></small></h1>
+        </div>
+        <div class="row">
+          <div class="span-16">
+
+            <ul>
+              <li>Loads EventMachine and EM-Synchrony. Requires app server with EventMachine and Ruby 1.9 support (<a href="http://code.macournoyer.com/thin">Thin</a>, <a href="http://rainbows.rubyforge.org">Rainbows!</a>, <a href="http://www.engineyard.com">Engine Yard</a>, <a href="http://heroku.com">Heroku</a>). It should also work on <a href="http://jruby.org">JRuby</a> (with JRUBY_OPTS="--1.9").</li>
+              <li>Inserts the <a href="https://github.com/mperham/rack-fiber_pool">Rack::FiberPool</a> middleware, which automatically provides a Fiber for each incoming request, allowing EM-Synchrony to work.</li>
+              <li>Adds <a href="https://github.com/igrigorik/em-http-request">em-http-request</a>, which you can use with EM::Synchrony to do concurrent HTTP calls to APIs! Or if you'd rather use a different client, it can patch TCPSocket via EM-Synchrony. Any software that uses this (such as an HTTP Client that uses Net::HTTP) can run without blocking IO. No HTTPS support yet, so you should use em-http-request (directly or with <a href="https://github.com/technoweenie/faraday">Faraday</a>).</li>
+              <li>Patches Rack::Test so that it runs your tests within an EventMachine. Just test the same way you did before and it should just work.</li>
+              <li>Patches Resolv via <a href="https://github.com/mperham/em-resolv-replace">em-resolv-replace</a>, enabling non-blocking DNS lookups magically, the way <a href="http://4.bp.blogspot.com/-Ar_yaNkzA_s/TfgQzgntxbI/AAAAAAAAAJA/3ZM6k_oMxuA/s1600/labyrinth3.jpg">David Bowie</a> would want it.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <div class="container">
+      <section id="installation">
+        <div class="page-header">
+          <h1>Installation <small></small></h1>
+        </div>
+        <div class="row">
+          <div class="span16">
+            <p>Install the gem:</p>
+
+            <pre class="prettyprint lang-rb">gem install sinatra-synchrony</pre>
+
+            <p>Register with Sinatra <b>at the top, before any other middleware or plugins are loaded:</b></p>
+            <pre class="prettyprint lang-rb">
+require 'sinatra/base'
+require 'sinatra/synchrony'
+
+class App < Sinatra::Base
+  register Sinatra::Synchrony
+end</pre>
+
+            <p>If you are developing with a classic style app, just require the gem and it will automatically load:</p>
+
+            <pre class="prettyprint lang-rb">
+require 'sinatra'
+require 'sinatra/synchrony'
+
+get '/' do
+  'Sinatra::Synchrony is loaded automatically in classic mode, nothing needed'
+end
+</pre>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <div class="container">
+      <section id="benchmarks">
+        <div class="page-header">
+          <h1>Benchmarks <small>Ruby <b>scales</b>.</small></h1>
+        </div>
+        <div class="row">
+          <div class="span-16">
+            <p>Despite enabling synchronous programming without callbacks, there is no performance hit to your application! All the performance benefits you expect from Thin/Rainbows and EventMachine are still there:</p>
+
+            <pre class="prettyprint lang-rb">
+class App < Sinatra::Base
+  register Sinatra::Synchrony
+  get '/' do
+    'Hello World!'
+  end
+end
+</pre>
+            <p>Benchmarked with rackup -s thin:</p>
+            <pre>
+$ ab -c 50 -n 2000 http://127.0.0.1:9292/
+...
+Requests per second:    <b>3102.30</b> [#/sec] (mean)
+Time per request:       <b>16.117</b> [ms] (mean)
+Time per request:       <b>0.322</b> [ms] (mean, across all concurrent requests)
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:     5   16   7.7     13      38
+Waiting:        3   13   7.0     10      35
+Total:          6   16   7.7     13      38
+</pre>
+
+            <p>Let's try a simple blocking IO example to prove it works. 100 hits to google.com:</p>
+
+            <pre class="prettyprint lang-rb">
+require 'sinatra'
+require 'sinatra/synchrony'
+require 'rest-client'
+require 'faraday'
+Faraday.default_adapter = :em_synchrony
+
+get '/' do
+  Faraday.get 'http://google.com'
+end
+</pre>
+
+            <pre>
+$ ab -c 100 -n 100 http://127.0.0.1:9292/
+...
+Time taken for tests:   0.256 seconds
+</pre>
+            <p>For a perspective, this operation took <b>33 seconds</b> without this extension in thin.</b>
+
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <div class="container">
+      <section id="geoloqi">
+        <div class="page-header">
+          <h1>Geoloqi <small></small></h1>
+        </div>
+        <div class="row">
+          <div class="span-16">
+            <p>This gem was designed to help us develop faster games and internal applications for Geoloqi: a private, real-time mobile and web platform for securely sharing location data. We wanted to share with you how we deal with concurrency issues, and also make it easy to utilize this for our other projects. One of these projects is our recently released Geoloqi ruby adapter, which utilizes Faraday and sinatra-synchrony to provide massive concurrency with almost no changes required to your code. Geoloqi is production ready right now, and we have a lot of major features and enhancements in store for this summer. Keep an eye on us! We won't disappoint.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <div class="container last">
+      <section id="source-code">
+        <div class="page-header">
+          <h1>Source Code <small></small></h1>
+        </div>
+        <div class="row">
+          <div class="span-16">
+            <p><a href="http://github.com/kyledrake/sinatra-synchrony" class="btn large primary">Fork me on Github!</a></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
