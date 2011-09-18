@@ -73,7 +73,7 @@
               <li>Inserts the <a href="https://github.com/mperham/rack-fiber_pool">Rack::FiberPool</a> middleware, which automatically provides a Fiber for each incoming request, allowing EM-Synchrony to work.</li>
               <li>Adds <a href="https://github.com/igrigorik/em-http-request">em-http-request</a>, which you can use with EM::Synchrony to do concurrent HTTP calls to APIs! Or if you'd rather use a different client, it can patch TCPSocket via EM-Synchrony. Any software that uses this (such as an HTTP Client that uses Net::HTTP) can run without blocking IO. No HTTPS support yet, so you should use em-http-request (directly or with <a href="https://github.com/technoweenie/faraday">Faraday</a>).</li>
               <li>Patches Rack::Test so that it runs your tests within an EventMachine. Just test the same way you did before and it should just work.</li>
-              <li>Patches Resolv via <a href="https://github.com/mperham/em-resolv-replace">em-resolv-replace</a>, enabling non-blocking DNS lookups magically, the way <a href="http://4.bp.blogspot.com/-Ar_yaNkzA_s/TfgQzgntxbI/AAAAAAAAAJA/3ZM6k_oMxuA/s1600/labyrinth3.jpg">David Bowie</a> would want it.</li>
+              <li>Patches Resolv via <a href="https://github.com/mperham/em-resolv-replace">em-resolv-replace</a>, enabling non-blocking DNS lookups magically, the way <a href="db.jpg">David Bowie</a> would want it.</li>
             </ul>
           </div>
         </div>
@@ -203,6 +203,16 @@ Time taken for tests:   0.256 seconds
         </div>
       </section>
     </div>
+    
+    
+    <div class="container">
+    <div class="row">
+      <div class="span-16">
+        <img src="db.jpg">
+      </div>
+    </div>
+  </div>
+    
 
     <footer class="footer">
       <div class="container">
