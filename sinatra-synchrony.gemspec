@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version =         '>= 1.3.4'
   s.add_dependency 'sinatra',           '>= 1.0'
   s.add_dependency 'rack-fiber_pool',   '= 0.9.2'
-  s.add_dependency 'eventmachine',      '= 1.0.0.beta.3'
+  s.add_dependency 'eventmachine',      '= 1.0.0.beta.4'
   s.add_dependency 'em-http-request',   '= 1.0.0'
   s.add_dependency 'em-synchrony',      '= 1.0.0'
   s.add_dependency 'em-resolv-replace', '>= 1.1.1'
